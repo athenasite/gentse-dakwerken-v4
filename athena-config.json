@@ -1,0 +1,11 @@
+{
+  "projectName": "gentse-dakwerken-v4",
+  "siteType": "gentse-dakwerken-v4",
+  "layoutName": "standard",
+  "styleName": "modern",
+  "siteModel": "SPA",
+  "autoSheet": false,
+  "blueprintFile": "gentse-dakwerken-v4.json",
+  "safeName": "gentse-dakwerken-v4",
+  "generatedAt": "2026-03-24T21:11:45.901Z"
+}

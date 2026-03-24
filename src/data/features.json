@@ -1,0 +1,17 @@
+[
+  {
+    "title": "Dakrenovatie",
+    "description": "Volledige vernieuwing van hellende en platte daken met 10 jaar garantie.",
+    "icon": "roof.webp"
+  },
+  {
+    "title": "Zonnepanelen",
+    "description": "Maximaliseer uw rendement met onze hoogefficiënte zonnepaneel-oplossingen.",
+    "icon": "solar.webp"
+  },
+  {
+    "title": "Snelle Herstellingen",
+    "description": "Stormschade of lekken? Ons team staat 24/7 klaar voor spoedinterventies.",
+    "icon": "repair.webp"
+  }
+]
