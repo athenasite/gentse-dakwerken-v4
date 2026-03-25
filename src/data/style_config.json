@@ -22,5 +22,15 @@
   "--color-text-rgb": "30 41 59",
   "--color-heading-rgb": "15 23 42",
   "--color-title-rgb": "15 23 42",
-  "--color-button-bg-rgb": "59 130 246"
+  "--color-button-bg-rgb": "59 130 246",
+  "global_padding": 33,
+  "light_primary_color": "#e53838",
+  "light_button_color": "#d62e2e",
+  "light_accent_color": "#e22222",
+  "light_menu_color": "#dc2e2e",
+  "light_card_color": "#d41616",
+  "light_header_color": "#cf0707",
+  "light_footer_color": "#d36464",
+  "light_bg_color": "#d62424",
+  "light_text_color": "#d31717"
 }
