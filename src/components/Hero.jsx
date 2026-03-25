@@ -56,10 +56,16 @@ const Hero = ({ data }) => {
           className="text-xl md:text-2xl mb-8 opacity-90"
         />
         <EditableLink 
-          url="#" 
-          label={hero.ctaText} 
+          url={hero.ctaText} 
           cmsBind={{ file: "hero", index: 0, key: "ctaText" }}
-          className="btn-primary inline-block"
+          className="btn-primary inline-block relative z-30"
+          onClick={(e) => {
+            const url = (typeof hero.ctaText === 'object') ? hero.ctaText.url : hero.ctaText;
+            if (url && url.startsWith('#')) {
+              e.preventDefault();
+              document.querySelector(url)?.scrollIntoView({ behavior: 'smooth' });
+            }
+          }}
         />
       </div>
     </section>
