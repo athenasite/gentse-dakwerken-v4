@@ -3,7 +3,7 @@
  * Handles communication between the generated site (iframe) and the Athena Dock (parent).
  */
 (function () {
-    console.log("⚓ Athena Dock Connector v7 Active");
+    console.log("⚓ Athena Dock Connector v7 Active - PID:", Date.now());
 
     // --- 1. CONFIGURATION & STATE ---
     let lastKnownData = null;
@@ -67,6 +67,7 @@
     // --- 5. COMMUNICATION (INBOUND) ---
     window.addEventListener('message', async (event) => {
         const { type, key, value, section, direction, file, index } = event.data;
+        console.log("📥 Dock message received:", type, key, value);
 
         // Color Update
         if (type === 'DOCK_UPDATE_COLOR') {
@@ -136,6 +137,16 @@
                 if (isNaN(opacity)) opacity = 0.8;
                 root.style.setProperty('--hero-overlay-start', `rgba(0, 0, 0, ${opacity})`);
                 root.style.setProperty('--hero-overlay-end', `rgba(0, 0, 0, ${opacity * 0.4})`);
+                return;
+            }
+
+            if (key === 'hero_title_color') {
+                root.style.setProperty('--hero-title-color', value);
+                return;
+            }
+
+            if (key === 'hero_text_color') {
+                root.style.setProperty('--hero-text-color', value);
                 return;
             }
 

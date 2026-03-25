@@ -2,6 +2,8 @@
   {
     "company_name": "Gentse Dakwerken",
     "tagline": "Uw dak, onze passie. Specialist in renovatie & zonnepanelen.",
-    "theme": "tech"
+    "theme": "tech",
+    "header_visible": false,
+    "header_height": 214
   }
 ]

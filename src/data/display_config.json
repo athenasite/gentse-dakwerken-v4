@@ -1,4 +1,10 @@
 {
   "site_name": "gentse-dakwerken-v4",
-  "tagline": ""
+  "tagline": "",
+  "sections": {
+    "hero": {
+      "visible_fields": [],
+      "hidden_fields": []
+    }
+  }
 }
