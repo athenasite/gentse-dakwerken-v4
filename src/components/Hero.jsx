@@ -1,47 +1,64 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 const Hero = ({ data }) => {
   if (!data || data.length === 0) return null;
   const hero = data[0];
-
-  const [overlayStyles, setOverlayStyles] = useState({
-    start: 'rgba(0,0,0,0.5)',
-    end: 'rgba(0,0,0,0.2)',
-    color: 'white'
-  });
+  const sectionRef = useRef(null);
 
   useEffect(() => {
-    const updateOverlays = () => {
+    const updateHeroStyle = () => {
+      if (!sectionRef.current) return;
       const root = document.documentElement;
+      
       const start = root.style.getPropertyValue('--hero-overlay-start').trim() || 'rgba(0,0,0,0.5)';
       const end = root.style.getPropertyValue('--hero-overlay-end').trim() || 'rgba(0,0,0,0.2)';
       const color = root.style.getPropertyValue('--hero-title-color').trim() || 'white';
-      setOverlayStyles({ start, end, color });
+      
+      const bgUrl = hero.bgImage 
+        ? (hero.bgImage.startsWith('http') ? hero.bgImage : `${import.meta.env.BASE_URL}images/${hero.bgImage}`)
+        : `${import.meta.env.BASE_URL}images/hero-bg.webp`;
+      
+      sectionRef.current.style.backgroundImage = `linear-gradient(${start}, ${end}), url(${bgUrl})`;
+      sectionRef.current.style.color = color;
     };
 
-    updateOverlays();
-    window.addEventListener('message', (e) => {
+    // Listen for dock messages
+    const handleMessage = (e) => {
       if (e.data?.type === 'DOCK_UPDATE_COLOR') {
-        setTimeout(updateOverlays, 10);
+        requestAnimationFrame(updateHeroStyle);
       }
-    });
-    const observer = new MutationObserver(updateOverlays);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
-    return () => { window.removeEventListener('message', updateOverlays); observer.disconnect(); };
-  }, []);
+    };
+    window.addEventListener('message', handleMessage);
+    
+    // Check periodically
+    const interval = setInterval(updateHeroStyle, 200);
+    
+    // Initial
+    setTimeout(updateHeroStyle, 50);
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+      clearInterval(interval);
+    };
+  }, [hero.bgImage]);
+
+  const bgUrl = hero.bgImage 
+    ? (hero.bgImage.startsWith('http') ? hero.bgImage : `${import.meta.env.BASE_URL}images/${hero.bgImage}`)
+    : `${import.meta.env.BASE_URL}images/hero-bg.webp`;
 
   return (
     <section
+      ref={sectionRef}
       className="hero"
       data-dock-section="hero"
       style={{
-        backgroundImage: `linear-gradient(${overlayStyles.start}, ${overlayStyles.end}), url(${hero.bgImage ? (hero.bgImage.startsWith('http') ? hero.bgImage : `${import.meta.env.BASE_URL}images/${hero.bgImage}`) : `${import.meta.env.BASE_URL}images/hero-bg.webp`})`,
+        backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.2)), url(${bgUrl})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         minHeight: "60vh",
         display: "flex",
         alignItems: "center",
-        color: overlayStyles.color
+        color: "white"
       }}
     >
       <div className="container">

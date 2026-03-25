@@ -23,7 +23,7 @@
   "--color-heading-rgb": "15 23 42",
   "--color-title-rgb": "15 23 42",
   "--color-button-bg-rgb": "59 130 246",
-  "global_padding": 33,
+  "global_padding": 26,
   "light_primary_color": "#e53838",
   "light_button_color": "#d62e2e",
   "light_accent_color": "#e22222",

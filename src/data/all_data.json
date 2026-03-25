@@ -45,8 +45,11 @@
       "subtitle": "Van kleine herstellingen tot complete dakrenovaties en zonnepaneel-installaties.",
       "ctaText": "Vraag Uw Gratis Offerte",
       "bgImage": "hero-bg.webp",
-      "hero_overlay_transparantie": 0.28,
-      "hero_cta_style": "solid"
+      "hero_overlay_transparantie": 0.21,
+      "hero_cta_style": "solid",
+      "hero_height": 456,
+      "hero_padding_top": -106,
+      "hero_alignment": "right"
     }
   ],
   "layout_settings": {
@@ -233,8 +236,8 @@
       "company_name": "Gentse Dakwerken",
       "tagline": "Uw dak, onze passie. Specialist in renovatie & zonnepanelen.",
       "theme": "tech",
-      "header_visible": false,
-      "header_height": 214
+      "header_visible": true,
+      "header_height": 69
     }
   ],
   "style_bindings": {
@@ -266,7 +269,7 @@
     "--color-heading-rgb": "15 23 42",
     "--color-title-rgb": "15 23 42",
     "--color-button-bg-rgb": "59 130 246",
-    "global_padding": 33,
+    "global_padding": 26,
     "light_primary_color": "#e53838",
     "light_button_color": "#d62e2e",
     "light_accent_color": "#e22222",
