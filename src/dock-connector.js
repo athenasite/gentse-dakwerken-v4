@@ -298,8 +298,17 @@
 
     // Click selection
     document.addEventListener('click', (e) => {
+        console.log("🖱️ Click event fired, shiftKey:", e.shiftKey);
         const target = e.target.closest('[data-dock-bind]');
-        if (target && window.parent !== window) {
+        console.log("🖱️ Click on editable element:", target ? 'yes' : 'no');
+        console.log("🖱️ Parent check:", window.parent !== window);
+        
+        if (!window.parent || window.parent === window) {
+            console.log("❌ Not in iframe, skipping");
+            return;
+        }
+        
+        if (target) {
             // v8: Shift+Click is nu vereist voor bewerken in de Dock
             if (!e.shiftKey) return;
 
