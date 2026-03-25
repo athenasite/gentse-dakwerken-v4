@@ -4,6 +4,7 @@
     "tagline": "Uw dak, onze passie. Specialist in renovatie & zonnepanelen.",
     "theme": "tech",
     "header_visible": false,
-    "header_height": 99
+    "header_height": 62,
+    "header_transparantie": 0
   }
 ]

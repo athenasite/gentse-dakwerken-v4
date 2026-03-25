@@ -7,25 +7,38 @@ const Hero = ({ data }) => {
   if (!data || data.length === 0) return null;
   const hero = data[0];
 
+  // Map Dock-specific transparency to a usable CSS variable if not already set by Dock directly
+  const overlayOpacity = (hero.hero_overlay_transparantie !== undefined) 
+    ? hero.hero_overlay_transparantie / 100 
+    : 0.5;
+
+  const sectionStyle = {
+    '--hero-overlay-start': `rgba(0,0,0,${overlayOpacity})`,
+    '--hero-overlay-end': `rgba(0,0,0,${overlayOpacity * 0.6})`,
+    minHeight: hero.hero_height ? `${hero.hero_height}px` : '70vh',
+    paddingTop: hero.hero_padding_top ? `${hero.hero_padding_top}px` : '0px'
+  };
+
   return (
     <section
-      className="hero relative flex items-center min-h-[70vh] bg-slate-800 overflow-hidden"
+      className="hero relative flex items-center bg-slate-800 overflow-hidden"
       data-dock-section="hero"
+      style={sectionStyle}
     >
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 pointer-events-none">
         <EditableMedia
-          src={hero.bgImage || 'hero_bg_gentse_dakwerken.png'}
+          src={hero.bgImage || 'hero-bg.webp'}
           alt="Hero Background"
           className="w-full h-full object-cover"
           cmsBind={{ file: "hero", index: 0, key: "bgImage" }}
         />
       </div>
       
-      {/* Dynamic Overlay using standard variables updated by dock */}
+      {/* Overlay */}
       <div 
-        className="absolute inset-0 z-10 pointer-events-none"
+        className="absolute inset-0 z-10 pointer-events-none transition-colors duration-500"
         style={{
-          background: 'linear-gradient(var(--hero-overlay-start, rgba(0,0,0,0.5)), var(--hero-overlay-end, rgba(0,0,0,0.2)))'
+          background: 'linear-gradient(to bottom, var(--hero-overlay-start), var(--hero-overlay-end))'
         }}
       ></div>
 

@@ -61,19 +61,25 @@
         "paddingBottom": 0
       },
       "subtitle": "Van kleine herstellingen tot complete dakrenovaties en zonnepaneel-installaties.",
-      "ctaText": "Vraag Uw Gratis Offerte",
+      "ctaText": {
+        "label": "Vraag Uw Gratis Offerte",
+        "url": "#contact"
+      },
       "bgImage": "hero-bg.webp",
-      "hero_overlay_transparantie": 0.84,
+      "hero_overlay_transparantie": 0.4,
       "hero_cta_style": "solid",
-      "hero_height": 456,
-      "hero_padding_top": -106,
-      "hero_alignment": "right"
+      "hero_height": 1000,
+      "hero_padding_top": 200,
+      "hero_alignment": "left"
     }
   ],
   "layout_settings": {
     "site_name": "gentse-dakwerken-v4",
     "tagline": "",
     "features": "focus"
+  },
+  "links_config": {
+    "hero:0:ctaText": "#contact"
   },
   "products": [
     {
@@ -270,13 +276,17 @@
       "tagline": "Uw dak, onze passie. Specialist in renovatie & zonnepanelen.",
       "theme": "tech",
       "header_visible": false,
-      "header_height": 99
+      "header_height": 62,
+      "header_transparantie": 0
     }
   ],
   "style_bindings": {
     "site_name": "gentse-dakwerken-v4",
     "tagline": "",
-    "hero:0:title": {}
+    "hero:0:title": {},
+    "hero:0:ctaText": {},
+    "team:0:image": {},
+    "team:2:image": {}
   },
   "style_config": {
     "--color-primary": "#0f172a",
@@ -322,19 +332,19 @@
       "name": "Karel Janssens",
       "role": "Meester Dakwerker",
       "bio": "Expert in authentieke Gentse dakpannen en complexe renovaties.",
-      "image": "placeholder-user.jpg"
+      "image": "karel-janssens-meester-dakwerker-expert-in-authent-1774444742419.jpeg"
     },
     {
       "name": "Sarah De Smet",
       "role": "Project Planning",
       "bio": "Zorgt ervoor dat elk project op tijd en binnen budget klaar is.",
-      "image": "placeholder-user.jpg"
+      "image": "karel-janssens-meester-dakwerker-expert-in-authent2-1774444780320.jpeg"
     },
     {
       "name": "Jan Peeters",
       "role": "Zonnepanelen Specialist",
       "bio": "Focus op duurzame energie en optimaal rendement voor uw dak.",
-      "image": "placeholder-user.jpg"
+      "image": "karel-janssens-meester-dakwerker-expert-in-authent1-1774444763288.jpeg"
     }
   ],
   "testimonials": [

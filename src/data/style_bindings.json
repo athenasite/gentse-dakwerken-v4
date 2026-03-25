@@ -1,5 +1,8 @@
 {
   "site_name": "gentse-dakwerken-v4",
   "tagline": "",
-  "hero:0:title": {}
+  "hero:0:title": {},
+  "hero:0:ctaText": {},
+  "team:0:image": {},
+  "team:2:image": {}
 }
