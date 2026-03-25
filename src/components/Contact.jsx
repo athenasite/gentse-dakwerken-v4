@@ -9,7 +9,7 @@ const Contact = ({ data, siteSettings = {} }) => {
   const settings = Array.isArray(siteSettings) ? (siteSettings[0] || {}) : (siteSettings || {});
 
   return (
-    <section className="contact py-16 bg-white" data-dock-section="contact">
+    <section id="contact" className="contact py-16 bg-white" data-dock-section="contact">
       <div className="container">
         <div className="flex flex-col md:flex-row gap-12">
           

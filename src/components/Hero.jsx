@@ -7,16 +7,18 @@ const Hero = ({ data }) => {
   if (!data || data.length === 0) return null;
   const hero = data[0];
 
-  // Map Dock-specific transparency to a usable CSS variable if not already set by Dock directly
+  // Map data to CSS variables. We use these as fallbacks so the Dock's direct style.setProperty can win.
   const overlayOpacity = (hero.hero_overlay_transparantie !== undefined) 
     ? hero.hero_overlay_transparantie / 100 
     : 0.5;
 
   const sectionStyle = {
-    '--hero-overlay-start': `rgba(0,0,0,${overlayOpacity})`,
-    '--hero-overlay-end': `rgba(0,0,0,${overlayOpacity * 0.6})`,
-    minHeight: hero.hero_height ? `${hero.hero_height}px` : '70vh',
-    paddingTop: hero.hero_padding_top ? `${hero.hero_padding_top}px` : '0px'
+    '--hero-h': hero.hero_height ? `${hero.hero_height}px` : '70vh',
+    '--hero-pt': hero.hero_padding_top ? `${hero.hero_padding_top}px` : '0px',
+    '--hero-o-s': `rgba(0,0,0,${overlayOpacity})`,
+    '--hero-o-e': `rgba(0,0,0,${overlayOpacity * 0.6})`,
+    minHeight: 'var(--hero-h)',
+    paddingTop: 'var(--hero-pt)'
   };
 
   return (
@@ -38,7 +40,7 @@ const Hero = ({ data }) => {
       <div 
         className="absolute inset-0 z-10 pointer-events-none transition-colors duration-500"
         style={{
-          background: 'linear-gradient(to bottom, var(--hero-overlay-start), var(--hero-overlay-end))'
+          background: 'linear-gradient(to bottom, var(--hero-overlay-start, var(--hero-o-s)), var(--hero-overlay-end, var(--hero-o-e)))'
         }}
       ></div>
 
