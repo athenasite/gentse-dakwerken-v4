@@ -12,7 +12,7 @@ const Features = ({ data }) => {
             <div key={index} className="feature-card">
               {feature.icon && (
                 <img
-                  src={feature.icon}
+                  src={feature.icon.startsWith('http') ? feature.icon : `/images/${feature.icon}`}
                   alt={feature.title}
                   style={{ width: "64px", height: "64px", marginBottom: "1rem", objectFit: "contain" }}
                   data-dock-bind={`{"file":"features", "index":${index}, "key":"icon"}`}

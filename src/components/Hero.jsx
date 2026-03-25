@@ -9,7 +9,7 @@ const Hero = ({ data }) => {
       className="hero"
       data-dock-section="hero"
       style={{
-        backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${hero.bgImage || 'hero-bg.webp'})`,
+        backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${hero.bgImage ? (hero.bgImage.startsWith('http') ? hero.bgImage : `/images/${hero.bgImage}`) : '/images/hero-bg.webp'})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         minHeight: "60vh",
