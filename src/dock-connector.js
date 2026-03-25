@@ -3,7 +3,7 @@
  * Handles communication between the generated site (iframe) and the Athena Dock (parent).
  */
 (function () {
-    console.log("⚓ Athena Dock Connector v7 Active - PID:", Date.now());
+    console.log("⚓ Athena Dock Connector v7 Active");
 
     // --- 1. CONFIGURATION & STATE ---
     let lastKnownData = null;
@@ -13,28 +13,60 @@
         return (base + '/' + path).replace(new RegExp('/+', 'g'), '/');
     };
 
-    // --- 2. THEME MAPPINGS ---
-    const themeMappings = {
-        // Universal mappings that apply regardless of current theme prefix
-        'primary_color': ['--color-primary', '--primary-color'],
-        'title_color': ['--color-title'],
-        'heading_color': ['--color-heading'],
-        'accent_color': ['--color-accent'],
-        'button_color': ['--color-button-bg', '--btn-bg', '--color-button'],
-        'card_color': ['--color-card-bg', '--card-bg', '--surface', '--color-surface', '--color-card'],
-        'header_color': ['--color-header-bg', '--nav-bg', '--color-header'],
-        'bg_color': ['--color-background', '--bg-site'],
-        'text_color': ['--color-text'],
-        'global_radius': ['--radius-custom', '--radius-main'],
-        'global_shadow': ['--shadow-main']
+    // 🔱 v8.8 Universal Binding Parser
+    // Converteert 'hero.0.titel' naar {file: 'hero', index: 0, key: 'titel'}
+    const parseBinding = (bindStr) => {
+        if (!bindStr) return {};
+        try {
+            // Check if it's already JSON
+            if (bindStr.startsWith('{')) return JSON.parse(bindStr);
+            
+            // Handle dot notation (e.g., "hero.0.titel")
+            const parts = bindStr.split('.');
+            if (parts.length >= 3) {
+                return {
+                    file: parts[0],
+                    index: parseInt(parts[1], 10),
+                    key: parts.slice(2).join('.')
+                };
+            }
+            return { key: bindStr }; // Fallback
+        } catch(e) {
+            console.warn("Athena: Kon binding niet parsen", bindStr);
+            return {};
+        }
     };
 
-    const globalMappings = {
-        'global_radius': '--radius-custom',
-        'hero_overlay_opacity': '--hero-overlay-opacity',
-        'hero_overlay_transparantie': '--hero-overlay-opacity',
-        'header_height': '--header-height',
-        'content_top_offset': '--content-top-offset'
+    // --- 2. THEME MAPPINGS ---
+    const themeMappings = {
+        light: {
+            'light_primary_color': ['--color-primary', '--primary-color'],
+            'light_title_color': ['--color-title'],
+            'light_heading_color': ['--color-heading'],
+            'light_accent_color': ['--color-accent'],
+            'light_button_color': ['--color-button-bg', '--btn-bg'],
+            'light_card_color': ['--color-card-bg', '--card-bg', '--surface', '--color-surface'],
+            'light_header_color': ['--color-header-bg', '--nav-bg'],
+            'light_menu_color': ['--color-menu-bg'],
+            'light_bg_color': ['--color-background', '--bg-site'],
+            'light_text_color': ['--color-text'],
+            'global_radius': ['--radius-custom', '--radius-main'],
+            'global_shadow': ['--shadow-main']
+        },
+        dark: {
+            'dark_primary_color': ['--color-primary'],
+            'dark_title_color': ['--color-title'],
+            'dark_heading_color': ['--color-heading'],
+            'dark_accent_color': ['--color-accent'],
+            'dark_button_color': ['--color-button-bg', '--btn-bg'],
+            'dark_card_color': ['--color-card-bg', '--card-bg', '--surface', '--color-surface'],
+            'dark_header_color': ['--color-header-bg', '--nav-bg'],
+            'dark_menu_color': ['--color-menu-bg'],
+            'dark_bg_color': ['--color-background', '--bg-site'],
+            'dark_text_color': ['--color-text'],
+            'global_radius': ['--radius-custom', '--radius-main'],
+            'global_shadow': ['--shadow-main']
+        }
     };
 
     // --- 3. SECTION SCANNER ---
@@ -53,7 +85,7 @@
 
         const structure = {
             sections: scanSections(),
-            layouts: lastKnownData?.layout_settings?.[0] || lastKnownData?.layout_settings || {},
+            layouts: (Array.isArray(lastKnownData?.layout_settings) ? lastKnownData.layout_settings[0] : lastKnownData?.layout_settings) || {},
             data: lastKnownData || {},
             url: window.location.href,
             timestamp: Date.now()
@@ -68,46 +100,43 @@
     // --- 5. COMMUNICATION (INBOUND) ---
     window.addEventListener('message', async (event) => {
         const { type, key, value, section, direction, file, index } = event.data;
-        console.log("📥 Dock message received:", type, key, value);
 
         // Color Update
         if (type === 'DOCK_UPDATE_COLOR') {
-            const root = document.documentElement;
-            const isDark = root.classList.contains('dark');
+            const isDark = document.documentElement.classList.contains('dark');
             const currentTheme = isDark ? 'dark' : 'light';
 
             if (key === 'theme') {
                 if (value === 'dark') {
-                    root.classList.add('dark');
-                    root.style.colorScheme = 'dark';
+                    document.documentElement.classList.add('dark');
+                    document.documentElement.style.colorScheme = 'dark';
                 } else {
-                    root.classList.remove('dark');
-                    root.style.colorScheme = 'light';
+                    document.documentElement.classList.remove('dark');
+                    document.documentElement.style.colorScheme = 'light';
                 }
                 return;
             }
 
-            // Global numeric/string variables
-            if (globalMappings[key]) {
-                const finalVal = (key === 'header_height' || key === 'content_top_offset')
-                    ? `${value}px`
-                    : value;
-                root.style.setProperty(globalMappings[key], finalVal);
+            // Specific Layout Handlers
+            if (key === 'content_top_offset') {
+                document.documentElement.style.setProperty('--content-top-offset', value + 'px');
+                return;
+            }
+
+            if (key === 'header_height') {
+                document.documentElement.style.setProperty('--header-height', value + 'px');
                 return;
             }
 
             if (key === 'header_transparent') {
-                const transparency = parseFloat(value);
-                if (transparency > 0) {
-                    const opacity = 1 - transparency;
-                    // Try to use RGB version if available
-                    root.style.setProperty('--header-bg', `rgba(var(--color-header-rgb, 255, 255, 255), ${opacity})`);
-                    root.style.setProperty('--header-blur', transparency > 0.5 ? 'none' : 'blur(16px)');
-                    root.style.setProperty('--header-border', 'none');
+                if (value === true) {
+                    document.documentElement.style.setProperty('--header-bg', 'transparent');
+                    document.documentElement.style.setProperty('--header-blur', 'none');
+                    document.documentElement.style.setProperty('--header-border', 'none');
                 } else {
-                    root.style.removeProperty('--header-bg');
-                    root.style.removeProperty('--header-blur');
-                    root.style.removeProperty('--header-border');
+                    document.documentElement.style.removeProperty('--header-bg');
+                    document.documentElement.style.removeProperty('--header-blur');
+                    document.documentElement.style.removeProperty('--header-border');
                 }
                 return;
             }
@@ -133,40 +162,29 @@
                 return;
             }
 
-            if (key === 'hero_overlay_opacity' || key === 'hero_overlay_transparantie') {
+            if (key === 'hero_overlay_opacity') {
                 let opacity = parseFloat(value);
                 if (isNaN(opacity)) opacity = 0.8;
-                root.style.setProperty('--hero-overlay-start', `rgba(0, 0, 0, ${opacity})`);
-                root.style.setProperty('--hero-overlay-end', `rgba(0, 0, 0, ${opacity * 0.4})`);
+                document.documentElement.style.setProperty('--hero-overlay-start', `rgba(0, 0, 0, ${opacity})`);
+                document.documentElement.style.setProperty('--hero-overlay-end', `rgba(0, 0, 0, ${opacity * 0.4})`);
                 return;
             }
 
-            if (key === 'hero_title_color') {
-                root.style.setProperty('--hero-title-color', value);
-                return;
-            }
-
-            if (key === 'hero_text_color') {
-                root.style.setProperty('--hero-text-color', value);
-                return;
-            }
-
-            // Theme-prefixed colors (light_... or dark_...)
-            const targetTheme = key.startsWith('dark') ? 'dark' : 'light';
-            const cleanKey = key.replace('light_', '').replace('dark_', '');
-
-            // Apply standard mappings if it matches current theme
+            // Global settings mapping
             let finalValue = value;
-            if (cleanKey === 'global_shadow') {
+            if (key === 'global_shadow') {
                 if (value === 'soft') finalValue = '0 4px 20px -2px rgba(0, 0, 0, 0.05)';
                 else if (value === 'strong') finalValue = '0 20px 50px -5px rgba(0, 0, 0, 0.15)';
                 else if (value === 'none') finalValue = 'none';
             }
 
-            if (targetTheme === currentTheme) {
-                const vars = themeMappings[cleanKey];
+            const targetTheme = key.startsWith('dark') ? 'dark' : 'light';
+            const isGlobal = key.startsWith('global_');
+
+            if (isGlobal || targetTheme === currentTheme) {
+                const vars = themeMappings[currentTheme][key];
                 if (vars) {
-                    vars.forEach(v => root.style.setProperty(v, finalValue));
+                    vars.forEach(v => document.documentElement.style.setProperty(v, finalValue));
                 }
             }
         }
@@ -192,7 +210,7 @@
             const baseUrl = import.meta.env.BASE_URL || '/';
 
             elements.forEach(el => {
-                const elBind = JSON.parse(el.getAttribute('data-dock-bind'));
+                const elBind = parseBinding(el.getAttribute('data-dock-bind'));
                 if (elBind.file !== file || elBind.index !== index || elBind.key !== key) return;
 
                 const dockType = el.getAttribute('data-dock-type') || (el.tagName === 'IMG' || el.tagName === 'VIDEO' ? 'media' : 'text');
@@ -209,22 +227,13 @@
                     if (el.hasAttribute('data-dock-current')) {
                         el.setAttribute('data-dock-current', value || "");
                     }
-                } else if (dockType === 'link') {
+                } else if (dockType === 'link' || dockType === 'button') {
                     const { label, url } = (typeof value === 'object' && value !== null) ? value : { label: value, url: "" };
                     el.innerText = label || "";
                     el.setAttribute('data-dock-label', label || "");
                     el.setAttribute('data-dock-url', url || "");
                 } else {
-                    if (typeof value === 'object' && value !== null) {
-                        el.innerText = value.text || "";
-                        if (value.color) el.style.color = value.color;
-                        if (value.fontSize) el.style.fontSize = `${value.fontSize}px`;
-                        if (value.fontWeight) el.style.fontWeight = value.fontWeight;
-                        if (value.fontStyle) el.style.fontStyle = value.fontStyle;
-                        if (value.textAlign) el.style.textAlign = value.textAlign;
-                    } else {
-                        el.innerText = value || "";
-                    }
+                    el.innerText = value || "";
                 }
             });
         }
@@ -270,7 +279,7 @@
         document.body.classList.remove('dock-dragging-active');
 
         if (!target) return;
-        const bind = JSON.parse(target.getAttribute('data-dock-bind'));
+        const bind = parseBinding(target.getAttribute('data-dock-bind'));
         if (!isMediaBind(bind)) return;
 
         e.preventDefault();
@@ -298,24 +307,16 @@
 
     // Click selection
     document.addEventListener('click', (e) => {
-        console.log("🖱️ Click event fired, shiftKey:", e.shiftKey);
         const target = e.target.closest('[data-dock-bind]');
-        console.log("🖱️ Click on editable element:", target ? 'yes' : 'no');
-        console.log("🖱️ Parent check:", window.parent !== window);
-        
-        if (!window.parent || window.parent === window) {
-            console.log("❌ Not in iframe, skipping");
-            return;
-        }
-        
-        if (target) {
+        if (target && window.parent !== window) {
             // v8: Shift+Click is nu vereist voor bewerken in de Dock
+            // Zodat normale links/knoppen blijven werken voor navigatie
             if (!e.shiftKey) return;
 
             e.preventDefault();
             e.stopPropagation();
 
-            const binding = JSON.parse(target.getAttribute('data-dock-bind'));
+            const binding = parseBinding(target.getAttribute('data-dock-bind'));
             const dockType = target.getAttribute('data-dock-type') || (
                 (binding.key && (binding.key.toLowerCase().includes('foto') ||
                     binding.key.toLowerCase().includes('image') ||
@@ -326,7 +327,7 @@
 
             let currentValue = target.getAttribute('data-dock-current') || target.innerText;
 
-            if (dockType === 'link') {
+            if (dockType === 'link' || dockType === 'button') {
                 currentValue = {
                     label: target.getAttribute('data-dock-label') || target.innerText,
                     url: target.getAttribute('data-dock-url') || ""

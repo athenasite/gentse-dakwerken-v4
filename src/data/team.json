@@ -1,1 +1,20 @@
-[]
+[
+  {
+    "name": "Karel Janssens",
+    "role": "Meester Dakwerker",
+    "bio": "Expert in authentieke Gentse dakpannen en complexe renovaties.",
+    "image": "placeholder-user.jpg"
+  },
+  {
+    "name": "Sarah De Smet",
+    "role": "Project Planning",
+    "bio": "Zorgt ervoor dat elk project op tijd en binnen budget klaar is.",
+    "image": "placeholder-user.jpg"
+  },
+  {
+    "name": "Jan Peeters",
+    "role": "Zonnepanelen Specialist",
+    "bio": "Focus op duurzame energie en optimaal rendement voor uw dak.",
+    "image": "placeholder-user.jpg"
+  }
+]

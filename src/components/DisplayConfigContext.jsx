@@ -17,12 +17,12 @@ export const DisplayConfigProvider = ({ children, data }) => {
   const isFieldVisible = (section, field) => {
     const sectionConfig = config.sections?.[section];
     if (!sectionConfig) return true;
-
+    
     // If hidden_fields exists and contains the field, it's hidden
     if (sectionConfig.hidden_fields && sectionConfig.hidden_fields.includes(field)) {
       return false;
     }
-
+    
     return true;
   };
 

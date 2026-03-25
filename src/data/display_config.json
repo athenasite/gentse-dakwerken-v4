@@ -5,6 +5,10 @@
     "hero": {
       "visible_fields": [],
       "hidden_fields": []
+    },
+    "features": {
+      "visible_fields": [],
+      "hidden_fields": []
     }
   }
 }

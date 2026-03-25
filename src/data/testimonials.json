@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "quote": "Zeer tevreden over de snelle service na stormschade. Vaklui die hun vak kennen!",
+    "author": "Luc Verbruggen",
+    "role": "Huiseigenaar in Gent",
+    "stars": "★★★★★",
+    "image": "placeholder-user.jpg"
+  },
+  {
+    "quote": "Onze zonnepanelen liggen er strak bij en de opbrengst is nu al boven verwachting.",
+    "author": "Emma Willems",
+    "role": "Duurzame verbouwer",
+    "stars": "★★★★★",
+    "image": "placeholder-user.jpg"
+  }
+]

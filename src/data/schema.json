@@ -15,7 +15,8 @@
       "columns": [
         "title",
         "subtitle",
-        "ctaText"
+        "ctaText",
+        "bgImage"
       ]
     },
     {

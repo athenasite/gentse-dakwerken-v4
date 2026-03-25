@@ -5,26 +5,24 @@ import { useDisplayConfig } from './DisplayConfigContext';
  * EditableText (Docked Track v8.4)
  * Passive wrapper that binds to the Athena Dock with individual styling.
  */
-export default function EditableText({
-  tagName: Tag = 'span',
-  value,
-  children,
-  cmsBind,
-  table,
-  field,
-  id,
-  className = "",
-  style = {},
-  renderValue,
-  ...props
+export default function EditableText({ 
+  tagName: Tag = 'span', 
+  value, 
+  children, 
+  cmsBind, 
+  table, 
+  field, 
+  id, 
+  className = "", 
+  style = {}, 
+  renderValue, 
+  ...props 
 }) {
   const { isFieldVisible } = useDisplayConfig() || {};
-  const isDev = import.meta.env.DEV;
-
-  const binding = useMemo(() => cmsBind || {
-    file: table,
-    index: id !== undefined ? id : 0,
-    key: field
+  const binding = useMemo(() => cmsBind || { 
+    file: table, 
+    index: id !== undefined ? id : 0, 
+    key: field 
   }, [cmsBind, table, id, field]);
 
   // 1. Visibility Check
@@ -38,18 +36,18 @@ export default function EditableText({
   // 2. Advanced Content Extraction
   const content = useMemo(() => {
     if (renderValue) return renderValue(actualValue);
-
+    
     // Safety check: if it's already a primitive, return it as string
     if (typeof actualValue !== 'object' || actualValue === null || React.isValidElement(actualValue)) {
       return String(actualValue ?? "");
     }
-
+    
     // It's an object, extract the best possible string
-    const extracted = actualValue.text ||
-                     actualValue.title ||
-                     actualValue.label ||
-                     actualValue.name ||
-                     actualValue.value ||
+    const extracted = actualValue.text || 
+                     actualValue.title || 
+                     actualValue.label || 
+                     actualValue.name || 
+                     actualValue.value || 
                      actualValue.content;
 
     if (extracted !== undefined) return String(extracted);
@@ -71,7 +69,7 @@ export default function EditableText({
     const shadowY = actualValue.shadowY !== undefined ? `${actualValue.shadowY}px` : '0px';
     const shadowBlur = actualValue.shadowBlur !== undefined ? `${actualValue.shadowBlur}px` : '0px';
     const shadowColor = actualValue.shadowColor || 'rgba(0,0,0,0.5)';
-
+    
     const hasShadow = actualValue.shadowX !== undefined || actualValue.shadowY !== undefined || actualValue.shadowBlur !== undefined;
     const textShadow = hasShadow ? `${shadowX} ${shadowY} ${shadowBlur} ${shadowColor}` : undefined;
 
@@ -104,9 +102,7 @@ export default function EditableText({
     return Object.fromEntries(Object.entries(styles).filter(([_, v]) => v !== undefined && v !== ''));
   }, [actualValue, isObject, style]);
 
-  if (!isDev) {
-    return <Tag className={className} style={individualStyle} {...props}>{safeContent}</Tag>;
-  }
+  
 
   // 4. Enhanced Metadata for Dock
   const dockBind = JSON.stringify({
@@ -118,7 +114,7 @@ export default function EditableText({
   // Dynamic type detection
   const tagStr = typeof Tag === 'string' ? Tag.toLowerCase() : '';
   const dockType = tagStr.match(/^h[1-6]$/) ? 'heading' : (tagStr === 'p' ? 'paragraph' : 'text');
-
+  
   // Human readable label (Site Title -> site_title)
   const dockLabel = field ? field.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : binding.key;
 

@@ -5,26 +5,26 @@ import { useDisplayConfig } from './DisplayConfigContext';
  * EditableLink (Docked Track v8.4.1)
  * Passive wrapper that binds to the Athena Dock with individual styling support.
  */
-export default function EditableLink({
-  url,
+export default function EditableLink({ 
+  url, 
   label,
   children,
   className = "",
   style = {},
-  cmsBind,
-  table,
-  field,
-  id,
+  cmsBind, 
+  table, 
+  field, 
+  id, 
   as: Tag = 'a',
-  ...props
+  ...props 
 }) {
   const { isFieldVisible } = useDisplayConfig() || {};
   const isDev = import.meta.env.DEV;
 
-  const binding = useMemo(() => cmsBind || {
-    file: table,
-    index: id !== undefined ? id : 0,
-    key: field
+  const binding = useMemo(() => cmsBind || { 
+    file: table, 
+    index: id !== undefined ? id : 0, 
+    key: field 
   }, [cmsBind, table, id, field]);
 
   // 1. Visibility Check

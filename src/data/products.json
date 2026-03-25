@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "title": "Klassieke Dakpannen",
+    "description": "Duurzame keramische dakpannen met 30 jaar garantie op vorstbestendigheid.",
+    "price": "Vanaf €45/m²",
+    "image": "roof.webp"
+  },
+  {
+    "title": "EPDM Dakbedekking",
+    "description": "Naadloze rubberdichting, perfect voor moderne platte daken.",
+    "price": "Vanaf €55/m²",
+    "image": "roof.webp"
+  }
+]

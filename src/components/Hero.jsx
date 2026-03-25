@@ -1,70 +1,53 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
+import EditableText from './EditableText';
+import EditableLink from './EditableLink';
+import EditableMedia from './EditableMedia';
 
 const Hero = ({ data }) => {
   if (!data || data.length === 0) return null;
   const hero = data[0];
-  const sectionRef = useRef(null);
-
-  useEffect(() => {
-    const updateHeroStyle = () => {
-      if (!sectionRef.current) return;
-      const root = document.documentElement;
-      
-      const start = root.style.getPropertyValue('--hero-overlay-start').trim() || 'rgba(0,0,0,0.5)';
-      const end = root.style.getPropertyValue('--hero-overlay-end').trim() || 'rgba(0,0,0,0.2)';
-      const color = root.style.getPropertyValue('--hero-title-color').trim() || 'white';
-      
-      const bgUrl = hero.bgImage 
-        ? (hero.bgImage.startsWith('http') ? hero.bgImage : `${import.meta.env.BASE_URL}images/${hero.bgImage}`)
-        : `${import.meta.env.BASE_URL}images/hero-bg.webp`;
-      
-      sectionRef.current.style.backgroundImage = `linear-gradient(${start}, ${end}), url(${bgUrl})`;
-      sectionRef.current.style.color = color;
-    };
-
-    // Listen for dock messages
-    const handleMessage = (e) => {
-      if (e.data?.type === 'DOCK_UPDATE_COLOR') {
-        requestAnimationFrame(updateHeroStyle);
-      }
-    };
-    window.addEventListener('message', handleMessage);
-    
-    // Check periodically
-    const interval = setInterval(updateHeroStyle, 200);
-    
-    // Initial
-    setTimeout(updateHeroStyle, 50);
-
-    return () => {
-      window.removeEventListener('message', handleMessage);
-      clearInterval(interval);
-    };
-  }, [hero.bgImage]);
-
-  const bgUrl = hero.bgImage 
-    ? (hero.bgImage.startsWith('http') ? hero.bgImage : `${import.meta.env.BASE_URL}images/${hero.bgImage}`)
-    : `${import.meta.env.BASE_URL}images/hero-bg.webp`;
 
   return (
     <section
-      ref={sectionRef}
-      className="hero"
+      className="hero relative flex items-center min-h-[70vh] bg-slate-800 overflow-hidden"
       data-dock-section="hero"
-      style={{
-        backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.2)), url(${bgUrl})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        minHeight: "60vh",
-        display: "flex",
-        alignItems: "center",
-        color: "white"
-      }}
     >
-      <div className="container">
-        <h1 data-dock-bind='{"file":"hero", "index":0, "key":"title"}'>{hero.title}</h1>
-        <p data-dock-bind='{"file":"hero", "index":0, "key":"subtitle"}'>{hero.subtitle}</p>
-        <button data-dock-bind='{"file":"hero", "index":0, "key":"ctaText"}'>{hero.ctaText}</button>
+      <div className="absolute inset-0 z-0">
+        <EditableMedia
+          src={hero.bgImage || 'hero_bg_gentse_dakwerken.png'}
+          alt="Hero Background"
+          className="w-full h-full object-cover"
+          cmsBind={{ file: "hero", index: 0, key: "bgImage" }}
+        />
+      </div>
+      
+      {/* Dynamic Overlay using standard variables updated by dock */}
+      <div 
+        className="absolute inset-0 z-10 pointer-events-none"
+        style={{
+          background: 'linear-gradient(var(--hero-overlay-start, rgba(0,0,0,0.5)), var(--hero-overlay-end, rgba(0,0,0,0.2)))'
+        }}
+      ></div>
+
+      <div className="container relative z-20 text-[var(--hero-title-color,white)]">
+        <EditableText 
+          tagName="h1" 
+          value={hero.title} 
+          cmsBind={{ file: "hero", index: 0, key: "title" }}
+          className="text-4xl md:text-5xl font-bold mb-4"
+        />
+        <EditableText 
+          tagName="p" 
+          value={hero.subtitle} 
+          cmsBind={{ file: "hero", index: 0, key: "subtitle" }}
+          className="text-xl md:text-2xl mb-8 opacity-90"
+        />
+        <EditableLink 
+          url="#" 
+          label={hero.ctaText} 
+          cmsBind={{ file: "hero", index: 0, key: "ctaText" }}
+          className="btn-primary inline-block"
+        />
       </div>
     </section>
   );
