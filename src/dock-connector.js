@@ -32,6 +32,7 @@
     const globalMappings = {
         'global_radius': '--radius-custom',
         'hero_overlay_opacity': '--hero-overlay-opacity',
+        'hero_overlay_transparantie': '--hero-overlay-opacity',
         'header_height': '--header-height',
         'content_top_offset': '--content-top-offset'
     };
@@ -132,7 +133,7 @@
                 return;
             }
 
-            if (key === 'hero_overlay_opacity') {
+            if (key === 'hero_overlay_opacity' || key === 'hero_overlay_transparantie') {
                 let opacity = parseFloat(value);
                 if (isNaN(opacity)) opacity = 0.8;
                 root.style.setProperty('--hero-overlay-start', `rgba(0, 0, 0, ${opacity})`);

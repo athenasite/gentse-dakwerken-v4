@@ -14,7 +14,13 @@
   ],
   "display_config": {
     "site_name": "gentse-dakwerken-v4",
-    "tagline": ""
+    "tagline": "",
+    "sections": {
+      "hero": {
+        "visible_fields": [],
+        "hidden_fields": []
+      }
+    }
   },
   "features": [
     {
@@ -39,7 +45,7 @@
       "subtitle": "Van kleine herstellingen tot complete dakrenovaties en zonnepaneel-installaties.",
       "ctaText": "Vraag Uw Gratis Offerte",
       "bgImage": "hero-bg.webp",
-      "hero_overlay_transparantie": 0.65,
+      "hero_overlay_transparantie": 0.22,
       "hero_cta_style": "outline"
     }
   ],
@@ -209,11 +215,11 @@
     }
   },
   "section_order": [
-    "site_settings",
-    "hero",
     "features",
+    "site_settings",
     "about",
     "products",
+    "hero",
     "testimonials",
     "team",
     "contact"
